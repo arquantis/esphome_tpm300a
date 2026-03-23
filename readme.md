@@ -17,24 +17,39 @@ Uso solo para datos: Si solo te interesa la lectura digital (VOC, eCO2, LPG), NO
 Si necesitás el Pin A: Debes usar un Divisor de Tensión (2 resistencias) o un Level Shifter (conversor de nivel lógico) para bajar esos 5V a un nivel seguro de 3.3V.
 
 
-## 1. Especificaciones de Hardware
+## Especificaciones de Hardware
+
+TPM-300A-V2.2
+
 Protocolo de Comunicación: UART (Serial).
 
 Velocidad (Baud Rate): 9600 bps.
 
 Nivel Lógico: 5V (⚠️ Requiere precaución con microcontroladores de 3.3V como ESP32).
 
-Pines del Conector:
+## Diagrama de Pines
 
-VCC: 5V Estables.
+| Pin | Función | Nota Importante |
+| :--- | :--- | :--- |
+| **VCC** | Alimentación 5V | Requiere 5V estables. |
+| **GND** | Tierra | Común con el microcontrolador. |
+| **Pin B (R)** | **Salida de Datos UART** | Transmite la trama de 9 bytes (TX del sensor). Conectar al RX del ESP32. |
+| **Pin A (T)** | **Alarma / Test** | ⚠️ **Peligro para 3.3V:** Entrega 5V cuando supera el umbral. Dejar desconectado o usar divisor de tensión. |
 
-GND: Tierra.
+---
 
-Pin B (R): Salida de datos UART (TX del sensor).
+## Identificación en la Placa Real
 
-Pin A (T): Salida Digital de Alarma (5V si supera el umbral) / Entrada de Test (GND activa alarma).
+Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de soldadura:
 
-## 2. Estructura de la Trama de Datos (9 Bytes)
+#### Cara Frontal (Sensores y Microcontrolador)
+![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_001.jpg)
+
+#### Cara Posterior (Pistas y Conector)
+*Esta foto es ideal para seguir las pistas y confirmar las conexiones de los pines.*
+![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_002.jpg)
+
+## Estructura de la Trama de Datos (9 Bytes)
 El sensor envía una ráfaga de 9 bytes de forma constante.
 
 | Byte | Nombre | Valor | Función |
@@ -60,7 +75,7 @@ En código C++
 (uint16_t(data[High]) << 8) | data[Low]
 ~~~
 
-## 3. El Checksum (Validación de Integridad)
+## El Checksum (Validación de Integridad)
 El Checksum es el mecanismo de seguridad para asegurar que los datos no se corrompieron en el cable.
 
 Regla de cálculo: El último byte de la trama (Byte 8) debe ser igual a la suma de todos los bytes anteriores (0 al 7), quedándose solo con los 8 bits menos significativos.
@@ -73,7 +88,7 @@ Si la suma total da, por ejemplo, 0x03A4, el Checksum será 0xA4.
 
 El código compara 0xA4 con el último byte recibido. Si coinciden, el dato es VÁLIDO.
 
-## 4. Comportamiento Detectado por Pruebas
+## Comportamiento Detectado por Pruebas
 Prueba de Alcohol: Dispara el Sensor Principal (VOC) al máximo (5000+).
 
 Prueba de Aliento: Afecta principalmente al Aux 1 (eCO2) y levemente al principal por la humedad.
@@ -82,12 +97,12 @@ Prueba de Encendedor (Gas): Dispara fuertemente el Aux 2 (LPG) y el Principal.
 
 Pin A (Test): Al ponerlo a GND, el microcontrolador original fuerza el valor a 5000 y activa el buzzer.
 
-## 5. Mantenimiento y Calibración
+## Mantenimiento y Calibración
 Burn-in: El sensor requiere estar encendido al menos 24-48 horas después de mucho tiempo sin uso para estabilizar las lecturas.
 
 Línea de Base: Se autocalibra tomando el valor más bajo de las últimas horas como "aire limpio". Se recomienda ventilar el ambiente diariamente.
 
-## 6. Conexión serial
+## Conexión serial
 ~~~
 cat /dev/ttyUSB0 | hexdump -C
 ~~~
@@ -96,7 +111,7 @@ cat /dev/ttyUSB0 | hexdump -C
 stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 9 -g 1 /dev/ttyUSB0 | perl -lane 'if($F[1] eq "2c" && $F[2] eq "e4"){ printf "PPM: %-5d | Aux1: %-5d | Aux2: %-5d\n", hex($F[3])*256+hex($F[4]), hex($F[5])*256+hex($F[6]), hex($F[7])*256+hex($F[8]) }'
 ~~~
 
-## 7. Script de Diagnóstico "Universal" (Perl)
+## Script de Diagnóstico "Universal" (Perl)
 ~~~
 stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 9 -g 1 /dev/ttyUSB0 | perl -lane '
     if($F[1] eq "2c" && $F[2] eq "e4"){ 
@@ -113,7 +128,7 @@ stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 9 -g 1 /dev/ttyUSB0 | perl -l
     }'
 ~~~
 
-## 8. Script de Diagnóstico "Universal" (Python)
+## Script de Diagnóstico "Universal" (Python)
 ~~~
 import serial
 
@@ -157,7 +172,7 @@ finally:
     if 'ser' in locals(): ser.close()
 ~~~
 
-## 9. Final
+## Final
 "Este proyecto nació de la curiosidad y la necesidad de liberar hardware propietario. El conocimiento no tiene dueño, y este repositorio es un aporte para que estos sensores sigan midiendo aire en lugar de ocupar espacio en un vertedero."
 
 ## Licencia
