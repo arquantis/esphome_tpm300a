@@ -43,11 +43,11 @@ Nivel Lógico: 5V (⚠️ Requiere precaución con microcontroladores de 3.3V co
 Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de soldadura:
 
 #### Cara Frontal (Sensores y Microcontrolador)
-![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_001.jpg)
+![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_001.jpeg)
 
 #### Cara Posterior (Pistas y Conector)
 *Esta foto es ideal para seguir las pistas y confirmar las conexiones de los pines.*
-![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_002.jpg)
+![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_002.jpeg)
 
 ## Estructura de la Trama de Datos (9 Bytes)
 El sensor envía una ráfaga de 9 bytes de forma constante.
