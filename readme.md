@@ -1,5 +1,5 @@
 # Documentación Técnica: Sensor de Calidad de Aire TPM-300A (V2.2)
-Esta documentación resume la ingeniería inversa realizada sobre el módulo extraído del monitor de aire XY-W01 (Bereal CDDT02 V2.6).
+Esta documentación resume la ingeniería inversa realizada sobre el módulo extraído del monitor de aire XY-T01 (Bereal 210816 CDDT02 V2.6).
 
 ## ⚠️ AVISO DE SEGURIDAD: Niveles Lógicos y Voltaje (Pin A)
 El sensor TPM-300A V2.2 opera con niveles lógicos de 5V, mientras que el ESP32 y la mayoría de los microcontroladores modernos operan a 3.3V.
@@ -33,8 +33,8 @@ Nivel Lógico: 5V (⚠️ Requiere precaución con microcontroladores de 3.3V co
 | :--- | :--- | :--- |
 | **VCC** | Alimentación 5V | Requiere 5V estables. |
 | **GND** | Tierra | Común con el microcontrolador. |
-| **Pin B (R)** | **Salida de Datos UART** | Transmite la trama de 9 bytes (TX del sensor). Conectar al RX del ESP32. |
-| **Pin A (T)** | **Alarma / Test** | ⚠️ **Peligro para 3.3V:** Entrega 5V cuando supera el umbral. Dejar desconectado o usar divisor de tensión. |
+| **Pin B (T)** | **Salida de Datos UART** | Transmite la trama de 9 bytes (TX del sensor). Conectar al RX del ESP32. |
+| **Pin A** | **Alarma / Test** | ⚠️ **Peligro para 3.3V:** Entrega 5V cuando supera el umbral. Dejar desconectado o usar divisor de tensión. |
 
 ---
 
