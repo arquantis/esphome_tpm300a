@@ -15,7 +15,7 @@ sensor:
   - platform: tmp300a
     update_interval: 3s
     voc:
-      name: "VOC"
+      name: "TVOC"
       icon: "mdi:air-filter"
       unit_of_measurement: "PPM"
       filters:
@@ -24,9 +24,11 @@ sensor:
             - 0.0 -> 400.0
             - 2000.0 -> 5000.0
     eco2:
-      name: "eCO2"
-    lpg:
-      name: "LPG"
+      name: "CH2O"
+      icon: "mdi:fire"
+    co2:
+      name: "CO2"
+      icon: "mdi:molecule-co2" 
 
 
 

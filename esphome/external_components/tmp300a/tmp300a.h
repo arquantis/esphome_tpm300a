@@ -10,9 +10,9 @@ namespace tmp300a {
 class TMP300AComponent : public PollingComponent, public uart::UARTDevice {
  public:
   // Standard setters for the 3 detected gas channels
-  void set_voc_sensor(sensor::Sensor *s) { voc_sensor_ = s; }
-  void set_eco2_sensor(sensor::Sensor *s) { eco2_sensor_ = s; }
-  void set_lpg_sensor(sensor::Sensor *s) { lpg_sensor_ = s; }
+  void set_tvoc_sensor(sensor::Sensor *s) { tvoc_sensor_ = s; }
+  void set_ch2o_sensor(sensor::Sensor *s) { ch2o_sensor_ = s; }
+  void set_co2_sensor(sensor::Sensor *s) { co2_sensor_ = s; }
 
   void update() override {
     // Sensor sends a 9-byte packet constantly
@@ -36,16 +36,16 @@ class TMP300AComponent : public PollingComponent, public uart::UARTDevice {
           if (data[7] == calculated_checksum) {
             // Identifier for V2.2 firmware (0xE4)
             if (data[0] == 0xE4) {
-              // Main Sensor: VOC/Organic Gases
-              float voc  = (uint16_t(data[1]) << 8) | data[2];
-              // Aux 1: eCO2 (Estimated Carbon Dioxide)
-              float eco2 = (uint16_t(data[3]) << 8) | data[4];
-              // Aux 2: Combustible Gases (LPG/CH4)
-              float lpg  = (uint16_t(data[5]) << 8) | data[6];
+              // Main Sensor: TVOC
+              float tvoc  = (uint16_t(data[1]) << 8) | data[2];
+              // Aux 1: ch2o
+              float ch2o = (uint16_t(data[3]) << 8) | data[4];
+              // Aux 2: co2
+              float co2  = (uint16_t(data[5]) << 8) | data[6];
 
-              if (this->voc_sensor_ != nullptr) this->voc_sensor_->publish_state(voc);
-              if (this->eco2_sensor_ != nullptr) this->eco2_sensor_->publish_state(eco2);
-              if (this->lpg_sensor_ != nullptr) this->lpg_sensor_->publish_state(lpg);
+              if (this->tvoc_sensor_ != nullptr) this->voc_sensor_->publish_state(tvoc);
+              if (this->ch2o_sensor_ != nullptr) this->ch2o_sensor_->publish_state(ch2o);
+              if (this->co2_sensor_ != nullptr) this->co2_sensor_->publish_state(co2);
             }
           } else {
             ESP_LOGW("tmp300a", "Checksum mismatch! Data discarded.");
@@ -56,9 +56,9 @@ class TMP300AComponent : public PollingComponent, public uart::UARTDevice {
   }
 
  protected:
-  sensor::Sensor *voc_sensor_{nullptr};
-  sensor::Sensor *eco2_sensor_{nullptr};
-  sensor::Sensor *lpg_sensor_{nullptr};
+  sensor::Sensor *tvoc_sensor_{nullptr};
+  sensor::Sensor *ch2o_sensor_{nullptr};
+  sensor::Sensor *co2_sensor_{nullptr};
 };
 
 }  // namespace tmp300a

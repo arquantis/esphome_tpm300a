@@ -9,9 +9,9 @@ TMP300AComponent = tmp300a_ns.class_('TMP300AComponent', cg.PollingComponent, ua
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(TMP300AComponent),
-    cv.Required('voc'): sensor.sensor_schema(icon=ICON_BLUR, accuracy_decimals=0),
-    cv.Required('eco2'): sensor.sensor_schema(icon=ICON_WATER_PERCENT, accuracy_decimals=0),
-    cv.Required('lpg'): sensor.sensor_schema(icon=ICON_THERMOMETER, accuracy_decimals=0),
+    cv.Required('tvoc'): sensor.sensor_schema(icon="mdi:air-filter", accuracy_decimals=0),
+    cv.Required('ch2o'): sensor.sensor_schema(icon="mdi:fire", accuracy_decimals=0),
+    cv.Required('co2'): sensor.sensor_schema(icon="mdi:molecule-co2", accuracy_decimals=0),
 }).extend(cv.polling_component_schema('1s')).extend(uart.UART_DEVICE_SCHEMA)
 
 async def to_code(config):
@@ -19,13 +19,13 @@ async def to_code(config):
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
 
-    if 'voc' in config:
-        sens = await sensor.new_sensor(config['voc'])
+    if 'tvoc' in config:
+        sens = await sensor.new_sensor(config['tvoc'])
         # Usamos el método setter de C++
-        cg.add(var.set_voc_sensor(sens))
-    if 'eco2' in config:
-        sens = await sensor.new_sensor(config['eco2'])
-        cg.add(var.set_eco2_sensor(sens))
-    if 'lpg' in config:
-        sens = await sensor.new_sensor(config['lpg'])
-        cg.add(var.set_lpg_sensor(sens))
+        cg.add(var.set_tvoc_sensor(sens))
+    if 'ch2o' in config:
+        sens = await sensor.new_sensor(config['ch2o'])
+        cg.add(var.set_ch2o_sensor(sens))
+    if 'co2' in config:
+        sens = await sensor.new_sensor(config['co2'])
+        cg.add(var.set_co2_sensor(sens))

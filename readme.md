@@ -56,13 +56,23 @@ El sensor envía una ráfaga de 9 bytes de forma constante.
 |:---|:---|:---|:---|
 | 0  | Encabezado  | 0x2C | (Identificador de inicio de trama) |
 | 1  | Comando     | 0xE4 | (Identifica el tipo de reporte en V2.2) |
-| 2  | VOC         | High | Byte alto del Sensor Principal (TVOC) |
-| 3  | VOC         | Low  | Byte bajo del Sensor Principal (TVOC) |
-| 4  | eCO2        | High | Byte alto del Sensor Aux 1 (Dióxido de Carbono eq) |
-| 5  | eCO2        | Low  | Byte bajo del Sensor Aux 1 (Dióxido de Carbono eq) |
-| 6  | LPG         | High | Byte alto del Sensor Aux 2 (Gases Combustibles) |
-| 7  | LPG         | Low  | Byte bajo del Sensor Aux 2 (Gases Combustibles) |
+| 2  | tvoc        | High | Byte alto |
+| 3  | tvoc        | Low  | Byte bajo |
+| 4  | ch2o        | High | Byte alto |
+| 5  | ch2o        | Low  | Byte bajo |
+| 6  | co2         | High | Byte alto |
+| 7  | co2         | Low  | Byte bajo |
 | 8  | Checksum    | -    | Suma de verificación (Validación de integridad) |
+
+## Ejemplo de datos del sensor
+
+~~~
+cat /dev/ttyUSB0 | hexdump -C
+~~~
+
+~~~
+2C E4 00 5D 00 1B 01 BB 44
+~~~
 
 ## Reconstrucción de Valores (Matemática de bits)
 Para obtener el valor decimal (ej. 1500 ppm) de cada sensor, se unen los dos bytes correspondientes:
@@ -82,20 +92,11 @@ Regla de cálculo: El último byte de la trama (Byte 8) debe ser igual a la suma
 
 Ejemplo de validación:
 
-Sumás: 0x2C + 0xE4 + VOC_H + VOC_L + eCO2_H + eCO2_L + LPG_H + LPG_L.
+Sumás: 0x2C + 0xE4 + TVOC_H + TVOC_L + CH2O_H + CH2O_L + CO2_H + CO2_L.
 
 Si la suma total da, por ejemplo, 0x03A4, el Checksum será 0xA4.
 
 El código compara 0xA4 con el último byte recibido. Si coinciden, el dato es VÁLIDO.
-
-## Comportamiento Detectado por Pruebas
-Prueba de Alcohol: Dispara el Sensor Principal (VOC) al máximo (5000+).
-
-Prueba de Aliento: Afecta principalmente al Aux 1 (eCO2) y levemente al principal por la humedad.
-
-Prueba de Encendedor (Gas): Dispara fuertemente el Aux 2 (LPG) y el Principal.
-
-Pin A (Test): Al ponerlo a GND, el microcontrolador original fuerza el valor a 5000 y activa el buzzer.
 
 ## Mantenimiento y Calibración
 Burn-in: El sensor requiere estar encendido al menos 24-48 horas después de mucho tiempo sin uso para estabilizar las lecturas.
@@ -118,7 +119,7 @@ stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 9 -g 1 /dev/ttyUSB0 | perl -l
         $sum = (hex($F[1]) + hex($F[2]) + hex($F[3]) + hex($F[4]) + hex($F[5]) + hex($F[6]) + hex($F[7]) + hex($F[8])) & 0xFF;
         $check = hex($F[9]);
         if($sum == $check){
-            printf "✅ VOC: %-5d | eCO2: %-5d | LPG: %-5d | CS: OK\n", 
+            printf "✅ TVOC: %-5d | CH2O: %-5d | CO2: %-5d | CS: OK\n", 
             hex($F[3])*256+hex($F[4]), 
             hex($F[5])*256+hex($F[6]), 
             hex($F[7])*256+hex($F[8]);
@@ -156,11 +157,11 @@ try:
                 
                 if checksum_calculado == checksum_recibido:
                     # 2. Reconstrucción de valores
-                    voc  = (data[1] << 8) | data[2]
-                    eco2 = (data[3] << 8) | data[4]
-                    lpg  = (data[5] << 8) | data[6]
+                    tvoc  = (data[1] << 8) | data[2]
+                    ch2o = (data[3] << 8) | data[4]
+                    co2  = (data[5] << 8) | data[6]
                     
-                    print(f"✅ VOC: {voc:4} | eCO2: {eco2:4} | LPG: {lpg:4} | CS: OK")
+                    print(f"✅ TVOC: {tvoc:4} | CH2O: ch2o:4} | CO2: {co2:4} | CS: OK")
                 else:
                     print(f"❌ Error Checksum: Calc:{hex(checksum_calculado)} Recv:{hex(checksum_recibido)}")
 
