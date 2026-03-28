@@ -43,7 +43,7 @@ class TMP300AComponent : public PollingComponent, public uart::UARTDevice {
               // Aux 2: co2
               float co2  = (uint16_t(data[5]) << 8) | data[6];
 
-              if (this->tvoc_sensor_ != nullptr) this->voc_sensor_->publish_state(tvoc);
+              if (this->tvoc_sensor_ != nullptr) this->tvoc_sensor_->publish_state(tvoc);
               if (this->ch2o_sensor_ != nullptr) this->ch2o_sensor_->publish_state(ch2o);
               if (this->co2_sensor_ != nullptr) this->co2_sensor_->publish_state(co2);
             }

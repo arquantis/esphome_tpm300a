@@ -109,7 +109,7 @@ cat /dev/ttyUSB0 | hexdump -C
 ~~~
 
 ~~~
-stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 9 -g 1 /dev/ttyUSB0 | perl -lane 'if($F[1] eq "2c" && $F[2] eq "e4"){ printf "PPM: %-5d | Aux1: %-5d | Aux2: %-5d\n", hex($F[3])*256+hex($F[4]), hex($F[5])*256+hex($F[6]), hex($F[7])*256+hex($F[8]) }'
+stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 9 -g 1 /dev/ttyUSB0 | perl -lane 'if($F[1] eq "2c" && $F[2] eq "e4"){ printf "TVOC: %-5d PPM | CH2O: %-5d | CO2: %-5d\n", hex($F[3])*256+hex($F[4]), hex($F[5])*256+hex($F[6]), hex($F[7])*256+hex($F[8]) }'
 ~~~
 
 ## Script de Diagnóstico "Universal" (Perl)
