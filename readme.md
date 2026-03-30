@@ -11,8 +11,7 @@ Comportamiento: Cuando la concentración de gas supera ese umbral, el Pin A se a
 
 Riesgo: Si conectás este pin directamente a un GPIO del ESP32 sin protección, podrías quemar el puerto permanentemente o dañar el microcontrolador.
 
-Recomendaciones de conexión
-Uso solo para datos: Si solo te interesa la lectura digital (VOC, eCO2, LPG), NO CONECTES EL PIN A. Con el Pin B (UART) es suficiente para obtener toda la información.
+Con el Pin B (UART) es suficiente para obtener toda la información.
 
 Si necesitás el Pin A: Debes usar un Divisor de Tensión (2 resistencias) o un Level Shifter (conversor de nivel lógico) para bajar esos 5V a un nivel seguro de 3.3V.
 
@@ -25,7 +24,7 @@ Protocolo de Comunicación: UART (Serial).
 
 Velocidad (Baud Rate): 9600 bps.
 
-Nivel Lógico: 5V (⚠️ Requiere precaución con microcontroladores de 3.3V como ESP32).
+Nivel Lógico: 5V (Requiere precaución con microcontroladores de 3.3V como ESP32).
 
 ## Diagrama de Pines
 
@@ -33,19 +32,19 @@ Nivel Lógico: 5V (⚠️ Requiere precaución con microcontroladores de 3.3V co
 | :--- | :--- | :--- |
 | **VCC** | Alimentación 5V | Requiere 5V estables. |
 | **GND** | Tierra | Común con el microcontrolador. |
-| **Pin B (T)** | **Salida de Datos UART** | Transmite la trama de 9 bytes (TX del sensor). Conectar al RX del ESP32. |
-| **Pin A** | **Alarma / Test** | ⚠️ **Peligro para 3.3V:** Entrega 5V cuando supera el umbral. Dejar desconectado o usar divisor de tensión. |
+| **Pin B** | TX **Salida de Datos UART** | Transmite la trama de 9 bytes |
+| **Pin A** | **Alarma / Test** | ⚠️ **Peligro para 3.3V:** Entrega 5V cuando supera el umbral. |
 
 ---
 
-## Identificación en la Placa Real
+## Identificación de la Placa
 
 Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de soldadura:
 
-#### Cara Frontal (Sensores y Microcontrolador)
+#### Cara Frontal
 ![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_001.jpeg)
 
-#### Cara Posterior (Pistas y Conector)
+#### Cara Posterior
 *Esta foto es ideal para seguir las pistas y confirmar las conexiones de los pines.*
 ![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_002.jpeg)
 
