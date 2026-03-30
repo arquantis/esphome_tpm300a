@@ -1,4 +1,5 @@
-# Documentación Técnica: Sensor de Calidad de Aire TPM-300A (V2.2)
+# TPM-300A V2.2
+## Sensor de Calidad de Aire 
 Esta documentación resume la ingeniería inversa realizada sobre el módulo extraído del monitor de aire XY-T01 (Bereal 210816 CDDT02 V2.6).
 
 ## ⚠️ AVISO DE SEGURIDAD: Niveles Lógicos y Voltaje (Pin A)
@@ -33,7 +34,7 @@ Nivel Lógico: 5V (Requiere precaución con microcontroladores de 3.3V como ESP3
 | **VCC** | Alimentación 5V | Requiere 5V estables. |
 | **GND** | Tierra | Común con el microcontrolador. |
 | **Pin B** | TX **Salida de Datos UART** | Transmite la trama de 9 bytes |
-| **Pin A** | **Alarma / Test** | ⚠️ **Peligro para 3.3V:** Entrega 5V cuando supera el umbral. |
+| **Pin A** | **Alarma / Test** | ⚠️ **Peligro** Entrega 5V cuando supera el umbral. |
 
 ---
 
@@ -45,7 +46,6 @@ Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de s
 ![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_001.jpeg)
 
 #### Cara Posterior
-*Esta foto es ideal para seguir las pistas y confirmar las conexiones de los pines.*
 ![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_002.jpeg)
 
 ## Estructura de la Trama de Datos (9 Bytes)
@@ -171,9 +171,6 @@ except Exception as e:
 finally:
     if 'ser' in locals(): ser.close()
 ~~~
-
-## Final
-"Este proyecto nació de la curiosidad y la necesidad de liberar hardware propietario. El conocimiento no tiene dueño, y este repositorio es un aporte para que estos sensores sigan midiendo aire en lugar de ocupar espacio en un vertedero."
 
 ## Licencia
 Este proyecto está bajo la Licencia MIT. Consultá el archivo LICENSE para más detalles.
