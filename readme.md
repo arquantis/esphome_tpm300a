@@ -224,8 +224,7 @@ finally:
     if 'ser' in locals(): ser.close()
 ~~~
 
-## Licencia
-Este proyecto está bajo la Licencia MIT. Consultá el archivo LICENSE para más detalles.
+
 
 
 
@@ -347,4 +346,5 @@ finally:
     if 'ser' in locals(): ser.close()
 ~~~
 
-
+## Licencia
+Este proyecto está bajo la Licencia MIT. Consultá el archivo LICENSE para más detalles.
