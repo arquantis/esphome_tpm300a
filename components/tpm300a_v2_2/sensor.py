@@ -8,7 +8,7 @@ tpm300a_v22_ns = cg.esphome_ns.namespace('tpm300a_v2_2')
 TPM300AV22Component = tpm300a_v22_ns.class_('TPM300AV22Component', cg.PollingComponent, uart.UARTDevice)
 
 CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.declare_id(TPM300AComponent),
+    cv.GenerateID(): cv.declare_id(TPM300AV22Component),
     cv.Required('tvoc'): sensor.sensor_schema(icon="mdi:air-filter", accuracy_decimals=0),
     cv.Required('ch2o'): sensor.sensor_schema(icon="mdi:fire", accuracy_decimals=0),
     cv.Required('co2'): sensor.sensor_schema(icon="mdi:molecule-co2", accuracy_decimals=0),
