@@ -4,7 +4,7 @@ from esphome.components import sensor, uart
 from esphome.const import CONF_ID
 
 # Definimos el namespace y la clase
-tpm300a_ns = cg.esphome_ns.namespace('tpm300a_v2.2')
+tpm300a_ns = cg.esphome_ns.namespace('tpm300a_v2_2')
 TPM300AV22Component = tpm300a_ns.class_('TPM300AV22Component', cg.PollingComponent, uart.UARTDevice)
 
 CONFIG_SCHEMA = cv.Schema({
