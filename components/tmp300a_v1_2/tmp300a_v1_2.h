@@ -6,7 +6,7 @@
 #include "esphome/core/log.h"
 
 namespace esphome {
-namespace tpm300a_v12 {
+namespace tpm300a_v1_2 {
 
 class TPM300AV12Component : public PollingComponent, public uart::UARTDevice {
  public:
@@ -30,7 +30,7 @@ class TPM300AV12Component : public PollingComponent, public uart::UARTDevice {
               this->tvoc_sensor_->publish_state(tvoc_value);
             }
           } else {
-            ESP_LOGV("tpm300a_v12", "Trama incompleta o desfasada. Saltando...");
+            ESP_LOGV("tpm300a_v1_2", "Trama incompleta o desfasada. Saltando...");
           }
         }
       }
@@ -41,5 +41,5 @@ class TPM300AV12Component : public PollingComponent, public uart::UARTDevice {
   sensor::Sensor *tvoc_sensor_{nullptr};
 };
 
-}  // namespace tpm300a_v12
+}  // namespace tpm300a_v1_2
 }  // namespace esphome
