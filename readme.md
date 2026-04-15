@@ -95,10 +95,10 @@ Nivel Lógico: 5V (Requiere precaución con microcontroladores de 3.3V como ESP3
 Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de soldadura:
 
 #### Cara Frontal
-![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_001.jpeg)
+![Cara Frontal TPM-300A V2.2](https://github.com/arquantis/esphome_tpm300a/raw/main/TPM-300A-V2.2_001.jpeg)
 
 #### Cara Posterior
-![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/TPM-300A-V2.2/raw/main/TPM-300A-V2.2_002.jpeg)
+![Cara Posterior TPM-300A V2.2](https://github.com/arquantis/esphome_tpm300a/raw/main/TPM-300A-V2.2_002.jpeg)
 
 ## Estructura de la Trama de Datos (9 Bytes)
 El sensor envía una ráfaga de 9 bytes de forma constante.
@@ -256,10 +256,10 @@ Nivel Lógico: 5V (Requiere precaución con microcontroladores de 3.3V como ESP3
 Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de soldadura:
 
 #### Cara Frontal
-![Cara Frontal TPM-300A V1.2](https://github.com/arquantis/TPM-300A-V1.2/raw/main/TPM-300A-V1.2_001.jpeg)
+![Cara Frontal TPM-300A V1.2](https://github.com/arquantis/esphome_tpm300a/raw/main/TPM-300A-V1.2_001.jpeg)
 
 #### Cara Posterior
-![Cara Posterior TPM-300A V1.2](https://github.com/arquantis/TPM-300A-V1.2/raw/main/TPM-300A-V1.2_002.jpeg)
+![Cara Posterior TPM-300A V1.2](https://github.com/arquantis/esphome_tpm300a/raw/main/TPM-300A-V1.2_002.jpeg)
 
 ## Estructura de la Trama de Datos v1.2 (5 Bytes)
 El sensor envía una ráfaga de 5 bytes de forma constante.
