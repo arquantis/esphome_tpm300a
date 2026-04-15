@@ -61,5 +61,5 @@ class TPM300AV22Component : public PollingComponent, public uart::UARTDevice {
   sensor::Sensor *co2_sensor_{nullptr};
 };
 
-}  // namespace tmp300a_v2_2
+}  // namespace tpm300a_v2_2
 }  // namespace esphome
