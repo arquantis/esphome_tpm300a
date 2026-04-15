@@ -23,7 +23,7 @@ v2.2
 ~~~
 external_components:
   - source: github://arquantis/esphome_tpm300a/tpm300a_v2_2
-    components: [ tmp300a_v2_2 ]
+    components: [ tpmm300a_v2_2 ]
 
 uart:
   id: uart_bus
@@ -31,7 +31,7 @@ uart:
   rx_pin: GPIO33
 
 sensor:
-  - platform: tmp300a_v2_2
+  - platform: tpm300a_v2_2
     update_interval: 3s
     voc:
       name: "TVOC"

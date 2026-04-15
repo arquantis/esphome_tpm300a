@@ -4,11 +4,11 @@ from esphome.components import sensor, uart
 from esphome.const import CONF_ID
 
 # Definimos el namespace y la clase
-tmp300a_ns = cg.esphome_ns.namespace('tmp300a_v2.2')
-TMP300AV22Component = tmp300a_ns.class_('TMP300AV22Component', cg.PollingComponent, uart.UARTDevice)
+tpm300a_ns = cg.esphome_ns.namespace('tpm300a_v2.2')
+TPM300AV22Component = tpm300a_ns.class_('TPM300AV22Component', cg.PollingComponent, uart.UARTDevice)
 
 CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.declare_id(TMP300AComponent),
+    cv.GenerateID(): cv.declare_id(TPM300AComponent),
     cv.Required('tvoc'): sensor.sensor_schema(icon="mdi:air-filter", accuracy_decimals=0),
     cv.Required('ch2o'): sensor.sensor_schema(icon="mdi:fire", accuracy_decimals=0),
     cv.Required('co2'): sensor.sensor_schema(icon="mdi:molecule-co2", accuracy_decimals=0),

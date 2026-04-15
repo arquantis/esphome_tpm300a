@@ -5,9 +5,9 @@
 #include "esphome/components/uart/uart.h"
 
 namespace esphome {
-namespace tmp300a_v2_2 {
+namespace tpm300a_v2_2 {
 
-class TMP300AV22Component : public PollingComponent, public uart::UARTDevice {
+class TPM300AV22Component : public PollingComponent, public uart::UARTDevice {
  public:
   // Standard setters for the 3 detected gas channels
   void set_tvoc_sensor(sensor::Sensor *s) { tvoc_sensor_ = s; }
@@ -48,7 +48,7 @@ class TMP300AV22Component : public PollingComponent, public uart::UARTDevice {
               if (this->co2_sensor_ != nullptr) this->co2_sensor_->publish_state(co2);
             }
           } else {
-            ESP_LOGW("tmp300a_v2_2", "Checksum mismatch! Data discarded.");
+            ESP_LOGW("tpm300a_v2_2", "Checksum mismatch! Data discarded.");
           }
         }
       }
