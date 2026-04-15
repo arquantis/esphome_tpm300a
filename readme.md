@@ -1,4 +1,56 @@
-# TPM-300A V2.2
+# TPM-300A
+
+## esp-home
+
+v.1.2
+~~~
+external_components:
+  - source: github://arquantis/esphome_tpm300a/tpm300a_v1_2
+    components: [ tpm300a_v1_2 ]
+
+uart:
+  id: uart_bus
+  baud_rate: 9600
+  rx_pin: GPIO33
+  
+sensor:
+  - platform: tpm300a_v1_2
+    tvoc:
+      name: "Calidad de Aire"
+~~~
+
+v2.2
+~~~
+external_components:
+  - source: github://arquantis/esphome_tpm300a/tpm300a_v2_2
+    components: [ tmp300a_v2_2 ]
+
+uart:
+  id: uart_bus
+  baud_rate: 9600
+  rx_pin: GPIO33
+
+sensor:
+  - platform: tmp300a_v2_2
+    update_interval: 3s
+    voc:
+      name: "TVOC"
+      icon: "mdi:air-filter"
+      unit_of_measurement: "PPM"
+      filters:
+        - calibrate_linear:
+            # Mapeo: (Valor que entra -> Valor que querés ver)
+            - 0.0 -> 400.0
+            - 2000.0 -> 5000.0
+    eco2:
+      name: "CH2O"
+      icon: "mdi:fire"
+    co2:
+      name: "CO2"
+      icon: "mdi:molecule-co2" 
+~~~
+
+## V2.2
 ## Sensor de Calidad de Aire 
 Esta documentación resume la ingeniería inversa realizada sobre el módulo extraído del monitor de aire XY-T01 (Bereal 210816 CDDT02 V2.6).
 
@@ -174,3 +226,125 @@ finally:
 
 ## Licencia
 Este proyecto está bajo la Licencia MIT. Consultá el archivo LICENSE para más detalles.
+
+
+
+
+# v1.2
+
+## Especificaciones de Hardware
+
+TPM-300A-V1.2
+
+Protocolo de Comunicación: UART (Serial).
+
+Velocidad (Baud Rate): 9600 bps.
+
+Nivel Lógico: 5V (Requiere precaución con microcontroladores de 3.3V como ESP32).
+
+## Diagrama de Pines
+
+| Pin | Función | Nota Importante |
+| :--- | :--- | :--- |
+| **VCC** | Alimentación 5V | Requiere 5V estables. |
+| **GND** | Tierra | Común con el microcontrolador. |
+| **Pin B** | TX **Salida de Datos UART** | Transmite la trama de 9 bytes |
+| **Pin A** | **N/C** | ⚠️ **Desconocido** Se mantiene en 5v. |
+
+## Identificación de la Placa
+
+Aquí tienes las fotos de ambas caras de la PCB para identificar los puntos de soldadura:
+
+#### Cara Frontal
+![Cara Frontal TPM-300A V1.2](https://github.com/arquantis/TPM-300A-V1.2/raw/main/TPM-300A-V1.2_001.jpeg)
+
+#### Cara Posterior
+![Cara Posterior TPM-300A V1.2](https://github.com/arquantis/TPM-300A-V1.2/raw/main/TPM-300A-V1.2_002.jpeg)
+
+## Estructura de la Trama de Datos v1.2 (5 Bytes)
+El sensor envía una ráfaga de 5 bytes de forma constante.
+
+| Byte | Nombre | Valor | Función |
+|:---|:---|:---|:---|
+| 0 | Encabezado  | 0x2C | Inicio de trama (,) |
+| 1 | tvoc High   | 0x00 - 0x03 | Parte alta del sensor (Multiplicador de 256) |
+| 2 | tvoc Low    | 0x00 - 0xFF | Parte baja del sensor (Suma simple) |
+| 3 | Constante   | 0x03 | Relleno (Fijo) |
+| 4 | Sincronismo | 0xFF | Fin de trama |
+
+## Ejemplo de datos del sensor
+
+~~~
+stty -F /dev/ttyUSB0 9600 raw
+cat /dev/ttyUSB0 | hexdump -C
+~~~
+
+~~~
+00000000  2c 00 f7 03 ff 25 2c 00  f0 03 ff 1e 2c 00 ea 03  |,....%,.....,...|
+00000010  ff 18 2c 00 e7 03 ff 15  2c 00 df 03 ff 0d 2c 00  |..,.....,.....,.|
+00000020  dc 03 ff 0a 2c 00 d3 03  ff 01 2c 00 cf 03 ff fd  |....,.....,.....|
+~~~
+
+## Conexión serial
+~~~
+cat /dev/ttyUSB0 | hexdump -C
+~~~
+
+~~~
+stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 5 -g 1 /dev/ttyUSB0 | perl -lane 'if($F[1] eq "2c"){ $val = hex($F[2])*256 + hex($F[3]); printf "Calidad Aire (v1.2): %-5d pts | Raw: %s %s\n", $val, $F[2], $F[3] }'
+~~~
+
+## Script de Diagnóstico "Universal" (Perl)
+~~~
+stty -F /dev/ttyUSB0 9600 raw && stdbuf -o0 xxd -c 5 -g 1 /dev/ttyUSB0 | perl -lane '
+    if($F[1] eq "2c" && $F[5] eq "ff"){ 
+        $val = hex($F[2])*256 + hex($F[3]);
+        printf "✅ v1.2 Aire: %-5d pts | Multi: %s | Fino: %s | Sync: OK\n", $val, $F[2], $F[3];
+    } elsif($F[1] eq "2c") {
+        printf "⚠️ TRAMA INCOMPLETA: %s %s %s %s %s\n", $F[1], $F[2], $F[3], $F[4], $F[5];
+    }'
+~~~
+
+## Script de Diagnóstico "Universal" (Python)
+~~~
+import serial
+
+port = "/dev/ttyUSB0"
+baud = 9600
+
+try:
+    ser = serial.Serial(port, baud, timeout=1)
+    print(f"--- Monitoreando TPM-300A v1.2 en {port} ---")
+    
+    while True:
+        # 1. Buscamos el byte de inicio 0x2C (la coma)
+        if ser.read() == b'\x2c':
+            # 2. Leemos los 4 bytes restantes de la trama v1.2
+            data = ser.read(4) 
+            if len(data) < 4: continue
+            
+            # Estructura v1.2: [2c] [multi] [fino] [03] [ff]
+            multiplicador = data[0]
+            dato_fino     = data[1]
+            constante     = data[2] # Debería ser 0x03
+            sync_byte     = data[3] # Debería ser 0xff
+            
+            # 3. Validación de estructura básica
+            if sync_byte == 0xff:
+                # Calculamos el puntaje unificado (10 bits aprox)
+                puntaje = (multiplicador << 8) | dato_fino
+                
+                print(f"✅ Calidad Aire: {puntaje:4} pts | Multi: {hex(multiplicador)} | Fino: {hex(dato_fino)} | Status: OK")
+            else:
+                # Si no termina en FF, perdimos el sincronismo
+                print(f"⚠️ Trama desfasada: {data.hex()}")
+
+except KeyboardInterrupt:
+    print("\nDetenido por el usuario.")
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    if 'ser' in locals(): ser.close()
+~~~
+
+
