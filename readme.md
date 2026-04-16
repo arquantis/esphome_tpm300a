@@ -81,7 +81,7 @@ Velocidad / Baud Rate: 9600
 Logical Level / Nivel Lógico: 5V
 
 Sensors / Sensores:
-tvoc: 0-1023 PPM
+tvoc: 0-1023 ppm
 
 ## Pinout / Pines
 
@@ -193,9 +193,9 @@ Velocidad / Baud Rate: 9600
 Logical Level / Nivel Lógico: 5V
 
 Sensors / Sensores:
-tvoc: 0-2000 PPM
-ch2o: ?
-co2: ?
+tvoc: 0-2000 ppm
+ch2o: 0-1.000 mg/m3
+co2: 350-2000 ppm
 
 ## Pinout / Pines
 | Pin | Descripción |
